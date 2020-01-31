@@ -3,7 +3,7 @@ import * as clipboard from 'clipboard-polyfill';
 
 import { SpinnerBox } from 'boot-cell/source/Prompt/Spinner';
 import { Button } from 'boot-cell/source/Form/Button';
-import { relativeTimeTo, TimeUnitName } from '../../utility';
+import { relativeTimeTo, TimeUnitName } from '../../utils/utility';
 import { Card } from 'boot-cell/source/Content/Card';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';

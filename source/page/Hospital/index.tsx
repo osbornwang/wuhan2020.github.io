@@ -7,7 +7,7 @@ import { Button } from 'boot-cell/source/Form/Button';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
 import 'boot-cell/source/Content/EdgeDetector';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';
-import { relativeTimeTo, TimeUnitName } from '../../utility';
+import { relativeTimeTo, TimeUnitName } from '../../utils/utility';
 import { hospitalService, sessionService } from '../../services';
 import { SuppliesRequirement } from '../../model';
 

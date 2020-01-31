@@ -4,7 +4,7 @@ import { Button } from 'boot-cell/source/Form/Button';
 import { GeoCoord, Contact, Supplies, Factory, RouteRoot } from '../../model';
 import CommonSupplies from '../Hospital/Supplies';
 import { SessionBox } from '../../component';
-import { mergeList } from '../../utility';
+import { mergeList } from '../../utils/utility';
 import { factoryService } from '../../services';
 import { searchAddress } from '../../utils/AMap';
 import { history } from '../../utils/History';

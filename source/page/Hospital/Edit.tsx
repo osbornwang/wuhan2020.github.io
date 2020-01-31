@@ -1,7 +1,7 @@
 import { component, mixin, watch, createCell } from 'web-cell';
 import { FormField } from 'boot-cell/source/Form/FormField';
 import { Button } from 'boot-cell/source/Form/Button';
-import { mergeList } from '../../utility';
+import { mergeList } from '../../utils/utility';
 import CommonSupplies from './Supplies';
 import { history } from '../../utils/History';
 
