@@ -1,24 +1,23 @@
 import { component, mixin, watch, createCell } from 'web-cell';
 import { FormField } from 'boot-cell/source/Form/FormField';
 import { Button } from 'boot-cell/source/Form/Button';
-
 import { mergeList } from '../../utility';
-import { RouteRoot } from '../menu';
 import CommonSupplies from './Supplies';
-import {
-    SuppliesRequirement,
-    GeoCoord,
-    Supplies,
-    Contact,
-    suppliesRequirement,
-    history
-} from '../../model';
+import { history } from '../../utils/history';
 import {
     SessionBox,
     ContactField,
     AddressField,
     SuppliesField
 } from '../../component';
+import {
+    SuppliesRequirement,
+    GeoCoord,
+    Supplies,
+    Contact,
+    RouteRoot
+} from '../../model';
+import { hospitalService } from '../../services';
 
 type HospitalEditProps = SuppliesRequirement & { loading?: boolean };
 
@@ -62,7 +61,7 @@ export class HospitalEdit extends mixin<{ srid: string }, HospitalEditProps>() {
             supplies,
             contacts,
             remark
-        } = await suppliesRequirement.getOne(this.srid);
+        } = await hospitalService.getOne(this.srid);
 
         this.setState({
             loading: false,
@@ -114,7 +113,7 @@ export class HospitalEdit extends mixin<{ srid: string }, HospitalEditProps>() {
         const { loading, supplies, ...data } = { ...this.state };
 
         try {
-            await suppliesRequirement.update(
+            await hospitalService.update(
                 { ...data, supplies: supplies.filter(({ count }) => count) },
                 this.srid
             );

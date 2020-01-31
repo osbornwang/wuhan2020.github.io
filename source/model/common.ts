@@ -1,20 +1,3 @@
-import { HTTPClient } from 'koajax';
-
-export const baseUri = {
-    local: 'http://localhost:3000',
-    remote: 'https://vuqjf9paihid.leanapp.cn',
-    test: 'https://vsw505fxbitp.leanapp.cn/'
-};
-
-export const service = new HTTPClient({
-    baseURI:
-        location.hostname === 'localhost'
-            ? baseUri[process.env.HTTP_ENV]
-            : 'https://vuqjf9paihid.leanapp.cn',
-    withCredentials: true,
-    responseType: 'json'
-});
-
 export interface DataItem {
     objectId?: string;
     createdAt?: string;
@@ -56,4 +39,11 @@ export interface Place {
     district?: string;
     address?: string;
     coords?: GeoCoord;
+}
+
+export interface Supplies {
+    name: string;
+    type: 'face' | 'leg' | 'disinfection' | 'device' | 'other';
+    remark: string;
+    count: number;
 }

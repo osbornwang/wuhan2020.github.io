@@ -5,7 +5,8 @@ import { Table } from 'boot-cell/source/Content/Table';
 import { Button } from 'boot-cell/source/Form/Button';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';
 
-import { logistics, LogisticsItem, ServiceArea } from '../../model';
+import { LogisticsItem, ServiceArea } from '../../model';
+import { logisticsService } from '../../services';
 
 interface LogisticsPageState {
     loading?: boolean;
@@ -30,7 +31,7 @@ export class LogisticsPage extends mixin<{}, LogisticsPageState>() {
     loadMore = async ({ detail }: EdgeEvent) => {
         if (detail !== 'bottom' || this.state.noMore) return;
         await this.setState({ loading: true });
-        const data = await logistics.getNextPage();
+        const data = await logisticsService.getNextPage();
         await this.setState({ loading: false, noMore: !data });
     };
 
@@ -63,7 +64,7 @@ export class LogisticsPage extends mixin<{}, LogisticsPageState>() {
                             </tr>
                         </thead>
                         <tbody>
-                            {logistics.list.map(
+                            {logisticsService.list.map(
                                 ({
                                     url,
                                     name,
@@ -135,7 +136,7 @@ export class LogisticsPage extends mixin<{}, LogisticsPageState>() {
                                                     <Button
                                                         className="btn btn-primary"
                                                         href={
-                                                            'tel:' + item.phone
+                                                            'tel:' + item.number
                                                         }
                                                     >
                                                         {item.name}

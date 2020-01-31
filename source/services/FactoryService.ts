@@ -1,6 +1,6 @@
 import { observable } from 'mobx';
-import { service, PageData } from '../HTTPService';
-import { Factory } from '../types/Factory';
+import { httpService } from '../utils/httpService';
+import { PageData, Factory } from '../model';
 let mock = {
     data: [
         {
@@ -37,7 +37,7 @@ export class FactoryService {
 
         const {
             body: { count, data }
-        } = await service.get<PageData<Factory>>(
+        } = await httpService.get<PageData<Factory>>(
             '/vendor?' +
                 new URLSearchParams({
                     pageIndex: this.pageIndex + 1 + '',
@@ -54,11 +54,14 @@ export class FactoryService {
 
     async update(data: Factory, id?: string) {
         if (!id) {
-            const { body } = await service.post<Factory>('/vendor', data);
+            const { body } = await httpService.post<Factory>('/vendor', data);
 
             this.list = [body].concat(this.list);
         } else {
-            const { body } = await service.put<Factory>('/vendor/' + id, data),
+            const { body } = await httpService.put<Factory>(
+                    '/vendor/' + id,
+                    data
+                ),
                 index = this.list.findIndex(({ objectId }) => objectId === id);
 
             this.list[index] = body;
@@ -66,12 +69,12 @@ export class FactoryService {
     }
 
     async getOne(id: string) {
-        const { body } = await service.get<Factory>('/vendor/' + id);
+        const { body } = await httpService.get<Factory>('/vendor/' + id);
         return body;
     }
 
     async delete(id: string) {
-        await service.delete('/vendor/' + id);
+        await httpService.delete('/vendor/' + id);
 
         this.list = this.list.filter(({ objectId }) => objectId !== id);
     }

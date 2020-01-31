@@ -1,10 +1,10 @@
 import { component, mixin, watch, createCell } from 'web-cell';
 import { FormField } from 'boot-cell/source/Form/FormField';
 import { Button } from 'boot-cell/source/Form/Button';
-
-import { RouteRoot } from '../menu';
-import { LogisticsItem, logistics, history, ServiceArea } from '../../model';
+import { LogisticsItem, ServiceArea, RouteRoot } from '../../model';
 import { SessionBox } from '../../component';
+import { logisticsService } from '../../services';
+import { history } from '../../utils/history';
 
 type LogisticsEditProps = LogisticsItem & { loading?: boolean };
 
@@ -31,7 +31,7 @@ export class LogisticsEdit extends mixin<
         url: '',
         serviceArea: [initServiceArea],
         remark: '',
-        contacts: [{ name: '', phone: '' }]
+        contacts: [{ name: '', number: '' }]
     };
 
     async connectedCallback() {
@@ -46,7 +46,7 @@ export class LogisticsEdit extends mixin<
             serviceArea,
             remark,
             contacts
-        } = await logistics.getOne(this.srid);
+        } = await logisticsService.getOne(this.srid);
 
         this.setState({
             loading: false,
@@ -94,7 +94,7 @@ export class LogisticsEdit extends mixin<
 
     addContact = () =>
         this.setState({
-            contacts: [...this.state.contacts, { name: '', phone: '' }]
+            contacts: [...this.state.contacts, { name: '', number: '' }]
         });
 
     deleteContact(index: number) {
@@ -108,7 +108,7 @@ export class LogisticsEdit extends mixin<
         await this.setState({ loading: true });
         const data = { ...this.state };
         delete data.loading;
-        await logistics.update(data, this.srid);
+        await logisticsService.update(data, this.srid);
         await this.setState({ loading: false });
         self.alert('发布成功！');
         history.push(RouteRoot.Logistics);
@@ -194,7 +194,7 @@ export class LogisticsEdit extends mixin<
                         )}
                     </FormField>
                     <FormField label="联系方式">
-                        {contacts.map(({ name, phone }, index) => (
+                        {contacts.map(({ name, number }, index) => (
                             <div
                                 className="input-group my-1"
                                 onChange={(event: Event) =>
@@ -211,8 +211,8 @@ export class LogisticsEdit extends mixin<
                                 <input
                                     type="tel"
                                     className="form-control"
-                                    name="phone"
-                                    value={phone}
+                                    name="number"
+                                    value={number}
                                     placeholder="电话号码（不含 +86 和区号的先导 0）"
                                 />
                                 <div className="input-group-append">

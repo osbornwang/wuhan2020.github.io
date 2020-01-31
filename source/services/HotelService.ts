@@ -1,17 +1,8 @@
 import { observable } from 'mobx';
-import { service, DataItem, User, PageData, Place } from './HTTPService';
-import { Contact } from './HTTPService';
+import { httpService } from '../utils/httpService';
+import { PageData, HotelCanStaying } from '../model';
 
-export interface HotelCanStaying extends DataItem, Place {
-    name?: string;
-    address?: string;
-    capacity?: number;
-    contacts?: Contact[];
-    creator?: User;
-    url?: string;
-}
-
-export class HotelCanStayingModel {
+export class HotelService {
     @observable
     pageIndex = 0;
 
@@ -26,7 +17,7 @@ export class HotelCanStayingModel {
         if (this.pageIndex && this.list.length === this.totalCount) return;
         const {
             body: { count, data }
-        } = await service.get<PageData<HotelCanStaying[]>>(
+        } = await httpService.get<PageData<HotelCanStaying[]>>(
             '/hotel?' +
                 new URLSearchParams({
                     pageIndex: this.pageIndex + 1 + '',
@@ -40,17 +31,17 @@ export class HotelCanStayingModel {
 
     update(data: HotelCanStaying, id?: string) {
         return id
-            ? service.put('/hotel/' + id, data)
-            : service.post('/hotel', data);
+            ? httpService.put('/hotel/' + id, data)
+            : httpService.post('/hotel', data);
     }
 
     async delete(id: string) {
-        await service.delete('/hotel/' + id);
+        await httpService.delete('/hotel/' + id);
         this.list = this.list.filter(({ objectId }) => objectId !== id);
     }
 
     async getOne(id: string) {
-        const { body } = await service.get<HotelCanStaying>('/hotel/' + id);
+        const { body } = await httpService.get<HotelCanStaying>('/hotel/' + id);
         return body;
     }
 }

@@ -2,7 +2,8 @@ import { component, mixin, watch, createCell } from 'web-cell';
 import { observer } from 'mobx-web-cell';
 import { Button } from 'boot-cell/source/Form/Button';
 
-import { User, session } from '../model';
+import { User } from '../model';
+import { sessionService } from '../services';
 
 @observer
 @component({
@@ -18,8 +19,8 @@ export class SessionBox extends mixin() {
     connectedCallback() {
         super.connectedCallback();
 
-        if (session.user) this.emitSignIn(session.user);
-        else session.getProfile().then(this.emitSignIn);
+        if (sessionService.user) this.emitSignIn(sessionService.user);
+        else sessionService.getProfile().then(this.emitSignIn);
     }
 
     handleSMSCode = () => {
@@ -31,7 +32,7 @@ export class SessionBox extends mixin() {
             ),
             { elements } = this.firstElementChild as HTMLFormElement;
 
-        return session.sendSMSCode(
+        return sessionService.sendSMSCode(
             (elements.namedItem('phone') as HTMLInputElement).value
         );
     };
@@ -41,7 +42,7 @@ export class SessionBox extends mixin() {
 
         const form = new FormData(event.target as HTMLFormElement);
 
-        session
+        sessionService
             .signIn(form.get('phone') as string, form.get('code') as string)
             .then(this.emitSignIn);
     };
@@ -49,14 +50,14 @@ export class SessionBox extends mixin() {
     updatedCallback() {
         const Classes = ['d-flex', 'flex-column', 'justify-content-center'];
 
-        if (session.user) this.classList.remove(...Classes);
+        if (sessionService.user) this.classList.remove(...Classes);
         else this.classList.add(...Classes);
     }
 
     render() {
         const { countDown } = this;
 
-        return session.user ? (
+        return sessionService.user ? (
             this.defaultSlot
         ) : (
             <form

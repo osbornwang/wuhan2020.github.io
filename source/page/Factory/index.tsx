@@ -2,14 +2,14 @@ import { component, mixin, createCell, Fragment } from 'web-cell';
 import * as clipboard from 'clipboard-polyfill';
 
 import { SpinnerBox } from 'boot-cell/source/Prompt/Spinner';
-import { Table } from 'boot-cell/source/Content/Table';
 import { Button } from 'boot-cell/source/Form/Button';
-import { FactoryStore, Factory, session } from '../../model';
 import { relativeTimeTo, TimeUnitName } from '../../utility';
 import { Card } from 'boot-cell/source/Content/Card';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';
 import { observer } from 'mobx-web-cell';
+import { factoryService, sessionService } from '../../services';
+import { Factory } from '../../model';
 
 interface FactoryPageState {
     loading?: boolean;
@@ -29,7 +29,7 @@ export class FactoryPage extends mixin<{}, FactoryPageState>() {
 
         await this.setState({ loading: true });
 
-        const data = await FactoryStore.getNextPage();
+        const data = await factoryService.getNextPage();
 
         await this.setState({ loading: false, noMore: !data });
     };
@@ -57,8 +57,8 @@ export class FactoryPage extends mixin<{}, FactoryPageState>() {
     }: Factory) => {
         const { distance, unit } = relativeTimeTo(createdAt),
             authorized =
-                session.user?.objectId === uid ||
-                session.hasRole('Admin') ||
+                sessionService.user?.objectId === uid ||
+                sessionService.hasRole('Admin') ||
                 null;
 
         return (
@@ -138,7 +138,7 @@ export class FactoryPage extends mixin<{}, FactoryPageState>() {
                                 kind="danger"
                                 block
                                 className="mt-3"
-                                onClick={() => FactoryStore.delete(objectId)}
+                                onClick={() => factoryService.delete(objectId)}
                             >
                                 删除
                             </Button>
@@ -162,7 +162,7 @@ export class FactoryPage extends mixin<{}, FactoryPageState>() {
 
                 <edge-detector onTouchEdge={this.loadMore}>
                     <div className="card-deck justify-content-around">
-                        {FactoryStore.list.map(this.renderItem)}
+                        {factoryService.list.map(this.renderItem)}
                     </div>
                     <p slot="bottom" className="text-center mt-2">
                         {noMore ? '没有更多数据了' : '加载更多...'}

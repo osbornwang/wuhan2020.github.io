@@ -1,5 +1,4 @@
-import { DataItem, Contact, User, Place } from '../HTTPService';
-import { Supplies } from '../SuppliesRequirement';
+import { DataItem, Contact, User, Place, Supplies } from './common';
 
 export interface Factory extends DataItem, Place {
     name?: string;

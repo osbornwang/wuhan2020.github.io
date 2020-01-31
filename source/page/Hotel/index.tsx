@@ -7,8 +7,8 @@ import { Button } from 'boot-cell/source/Form/Button';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
 import 'boot-cell/source/Content/EdgeDetector';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';
-import { hotelCanStaying, session } from '../../model';
 import { relativeTimeTo, TimeUnitName } from '../../utility';
+import { hotelService, sessionService } from '../../services';
 
 interface HotelPageState {
     loading?: boolean;
@@ -29,7 +29,7 @@ export class HotelPage extends mixin<{}, HotelPageState>() {
     loadMore = async ({ detail }: EdgeEvent) => {
         if (detail !== 'bottom' || this.state.noMore) return;
         await this.setState({ loading: true });
-        const data = await hotelCanStaying.getNextPage();
+        const data = await hotelService.getNextPage();
         await this.setState({ loading: false, noMore: !data });
     };
 
@@ -49,8 +49,8 @@ export class HotelPage extends mixin<{}, HotelPageState>() {
     }: any) => {
         const { distance, unit } = relativeTimeTo(createdAt),
             authorized =
-                session.user?.objectId === uid ||
-                session.hasRole('Admin') ||
+                sessionService.user?.objectId === uid ||
+                sessionService.hasRole('Admin') ||
                 null;
 
         return (
@@ -97,7 +97,7 @@ export class HotelPage extends mixin<{}, HotelPageState>() {
                                 block
                                 className="mt-3"
                                 onClick={() => {
-                                    hotelCanStaying.delete(objectId);
+                                    hotelService.delete(objectId);
                                 }}
                             >
                                 删除
@@ -122,7 +122,7 @@ export class HotelPage extends mixin<{}, HotelPageState>() {
                 </header>
                 <edge-detector onTouchEdge={this.loadMore}>
                     <div className="card-deck justify-content-around">
-                        {hotelCanStaying.list.map(this.renderItem)}
+                        {hotelService.list.map(this.renderItem)}
                     </div>
                     <p slot="bottom" className="text-center mt-2">
                         {noMore ? '没有更多数据了' : '加载更多...'}

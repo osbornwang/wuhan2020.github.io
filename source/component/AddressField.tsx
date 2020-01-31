@@ -6,8 +6,7 @@ import {
     createCell,
     Fragment
 } from 'web-cell';
-
-import { searchAddress } from '../model';
+import { searchAddress } from '../utils/AMap';
 
 interface AddressFieldProps {
     place?: string;

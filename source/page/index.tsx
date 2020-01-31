@@ -3,10 +3,7 @@ import { observer } from 'mobx-web-cell';
 import { HTMLRouter } from 'cell-router/source';
 import { NavBar } from 'boot-cell/source/Navigator/NavBar';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
-
-import { history, session } from '../model';
-import menu from './menu';
-
+import { history } from '../utils/History';
 import { HomePage } from './Home';
 import { HospitalPage } from './Hospital';
 import { HospitalEdit } from './Hospital/Edit';
@@ -18,6 +15,8 @@ import { FactoryPage } from './Factory';
 import { FactoryEdit } from './Factory/edit';
 import { DonationPage } from './Donation';
 import { ClinicPage } from './Clinic';
+import { sessionService } from '../services';
+import { Menu } from '../model';
 
 @observer
 @component({
@@ -37,7 +36,7 @@ export class PageRouter extends HTMLRouter {
         { paths: ['factory'], component: FactoryPage },
         { paths: ['factory/edit'], component: FactoryEdit },
         { paths: ['donation'], component: DonationPage },
-        { paths: ['clinic'], component: ClinicPage },
+        { paths: ['clinic'], component: ClinicPage }
     ];
 
     connectedCallback() {
@@ -47,7 +46,7 @@ export class PageRouter extends HTMLRouter {
     }
 
     async signOut() {
-        await session.signOut();
+        await sessionService.signOut();
 
         location.href = '.';
     }
@@ -57,7 +56,7 @@ export class PageRouter extends HTMLRouter {
             <Fragment>
                 <NavBar
                     title="2020 援助武汉"
-                    menu={menu.map(({ title, href }) => ({
+                    menu={Menu.map(({ title, href }) => ({
                         title,
                         href,
                         active:
@@ -66,9 +65,9 @@ export class PageRouter extends HTMLRouter {
                     }))}
                     narrow
                 >
-                    {session.user && (
+                    {sessionService.user && (
                         <DropMenu
-                            title={session.user.username}
+                            title={sessionService.user.username}
                             alignType="right"
                             alignSize="md"
                             list={[

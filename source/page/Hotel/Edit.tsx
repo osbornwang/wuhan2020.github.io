@@ -1,16 +1,10 @@
 import { component, mixin, watch, createCell } from 'web-cell';
 import { FormField } from 'boot-cell/source/Form/FormField';
 import { Button } from 'boot-cell/source/Form/Button';
-
-import { RouteRoot } from '../menu';
-import {
-    HotelCanStaying,
-    hotelCanStaying,
-    history,
-    GeoCoord,
-    Contact
-} from '../../model';
 import { SessionBox, AddressField, ContactField } from '../../component';
+import { HotelCanStaying, GeoCoord, Contact, RouteRoot } from '../../model';
+import { hotelService } from '../../services';
+import { history } from '../../utils/history';
 
 type HotelCanStayingEditState = HotelCanStaying & { loading?: boolean };
 
@@ -54,7 +48,7 @@ export class HotelEdit extends mixin<
             capacity,
             coords,
             url
-        } = await hotelCanStaying.getOne(this.srid);
+        } = await hotelService.getOne(this.srid);
 
         this.setState({
             name,
@@ -100,7 +94,7 @@ export class HotelEdit extends mixin<
         const params = { ...this.state };
 
         try {
-            await hotelCanStaying.update(params, this.srid);
+            await hotelService.update(params, this.srid);
 
             self.alert('发布成功！');
 

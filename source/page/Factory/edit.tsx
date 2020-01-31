@@ -1,20 +1,13 @@
 import { component, mixin, watch, createCell } from 'web-cell';
 import { FormField } from 'boot-cell/source/Form/FormField';
 import { Button } from 'boot-cell/source/Form/Button';
-
-import { RouteRoot } from '../menu';
-import {
-    searchAddress,
-    history,
-    FactoryStore,
-    GeoCoord,
-    Contact,
-    Supplies
-} from '../../model';
+import { GeoCoord, Contact, Supplies, Factory, RouteRoot } from '../../model';
 import CommonSupplies from '../Hospital/Supplies';
 import { SessionBox } from '../../component';
 import { mergeList } from '../../utility';
-import { Factory } from '../../model/types/Factory';
+import { factoryService } from '../../services';
+import { searchAddress } from '../../utils/AMap';
+import { history } from '../../utils/history';
 
 type FactoryEditProps = Factory & { loading?: boolean };
 
@@ -60,7 +53,7 @@ export class FactoryEdit extends mixin<{ srid: string }, FactoryEditProps>() {
             supplies,
             contacts,
             remark
-        } = await FactoryStore.getOne(this.srid);
+        } = await factoryService.getOne(this.srid);
 
         this.setState({
             loading: false,
@@ -160,12 +153,11 @@ export class FactoryEdit extends mixin<{ srid: string }, FactoryEditProps>() {
         const { loading, supplies, ...data } = { ...this.state };
 
         try {
-            await FactoryStore.update(
+            await factoryService.update(
                 { ...data, supplies: supplies.filter(({ count }) => count) },
                 this.srid
             );
             self.alert('发布成功！');
-
             history.push(RouteRoot.Hospital);
         } finally {
             await this.setState({ loading: false });

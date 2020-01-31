@@ -1,16 +1,15 @@
 import * as clipboard from 'clipboard-polyfill';
 import { component, mixin, createCell, Fragment } from 'web-cell';
 import { observer } from 'mobx-web-cell';
-
 import { SpinnerBox } from 'boot-cell/source/Prompt/Spinner';
 import { Card } from 'boot-cell/source/Content/Card';
 import { Button } from 'boot-cell/source/Form/Button';
 import { DropMenu } from 'boot-cell/source/Navigator/DropMenu';
 import 'boot-cell/source/Content/EdgeDetector';
 import { EdgeEvent } from 'boot-cell/source/Content/EdgeDetector';
-
 import { relativeTimeTo, TimeUnitName } from '../../utility';
-import { suppliesRequirement, SuppliesRequirement, session } from '../../model';
+import { hospitalService, sessionService } from '../../services';
+import { SuppliesRequirement } from '../../model';
 
 interface HospitalPageState {
     loading?: boolean;
@@ -30,7 +29,7 @@ export class HospitalPage extends mixin<{}, HospitalPageState>() {
 
         await this.setState({ loading: true });
 
-        const data = await suppliesRequirement.getNextPage();
+        const data = await hospitalService.getNextPage();
 
         await this.setState({ loading: false, noMore: !data });
     };
@@ -55,8 +54,8 @@ export class HospitalPage extends mixin<{}, HospitalPageState>() {
     }: SuppliesRequirement) => {
         const { distance, unit } = relativeTimeTo(createdAt),
             authorized =
-                session.user?.objectId === uid ||
-                session.hasRole('Admin') ||
+                sessionService.user?.objectId === uid ||
+                sessionService.hasRole('Admin') ||
                 null;
 
         return (
@@ -103,7 +102,7 @@ export class HospitalPage extends mixin<{}, HospitalPageState>() {
                 <footer className="mt-3 text-center text-mute">
                     <a href={'tel:+86-' + mobilePhoneNumber}>
                         {mobilePhoneNumber}
-                    </a>{' '}
+                    </a>
                     发布于 {Math.abs(distance)} {TimeUnitName[unit]}前
                     {authorized && (
                         <Fragment>
@@ -119,9 +118,7 @@ export class HospitalPage extends mixin<{}, HospitalPageState>() {
                                 kind="danger"
                                 block
                                 className="mt-3"
-                                onClick={() =>
-                                    suppliesRequirement.delete(objectId)
-                                }
+                                onClick={() => hospitalService.delete(objectId)}
                             >
                                 删除
                             </Button>
@@ -146,7 +143,7 @@ export class HospitalPage extends mixin<{}, HospitalPageState>() {
 
                 <edge-detector onTouchEdge={this.loadMore}>
                     <div className="card-deck justify-content-around">
-                        {suppliesRequirement.list.map(this.renderItem)}
+                        {hospitalService.list.map(this.renderItem)}
                     </div>
                     <p slot="bottom" className="text-center mt-2">
                         {noMore ? '没有更多数据了' : '加载更多...'}

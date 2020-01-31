@@ -7,7 +7,7 @@ export enum RouteRoot {
     Clinic = 'clinic'
 }
 
-export default [
+export const Menu = [
     {
         title: '首页',
         href: ''
