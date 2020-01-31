@@ -4,7 +4,7 @@ import { Button } from 'boot-cell/source/Form/Button';
 import { SessionBox, AddressField, ContactField } from '../../component';
 import { HotelCanStaying, GeoCoord, Contact, RouteRoot } from '../../model';
 import { hotelService } from '../../services';
-import { history } from '../../utils/history';
+import { history } from '../../utils/History';
 
 type HotelCanStayingEditState = HotelCanStaying & { loading?: boolean };
 

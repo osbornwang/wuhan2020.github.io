@@ -4,7 +4,7 @@ import { Button } from 'boot-cell/source/Form/Button';
 import { LogisticsItem, ServiceArea, RouteRoot } from '../../model';
 import { SessionBox } from '../../component';
 import { logisticsService } from '../../services';
-import { history } from '../../utils/history';
+import { history } from '../../utils/History';
 
 type LogisticsEditProps = LogisticsItem & { loading?: boolean };
 

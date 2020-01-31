@@ -7,7 +7,7 @@ import { SessionBox } from '../../component';
 import { mergeList } from '../../utility';
 import { factoryService } from '../../services';
 import { searchAddress } from '../../utils/AMap';
-import { history } from '../../utils/history';
+import { history } from '../../utils/History';
 
 type FactoryEditProps = Factory & { loading?: boolean };
 
